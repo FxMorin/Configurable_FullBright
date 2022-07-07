@@ -18,7 +18,7 @@ jobs:
                 brightStr = str(brightness)
                 newFolder = 'output/FullbrightPack'+brightStr
                 shutil.copytree('FullbrightPack', newFolder)
-                shutil.copy('packIcons/pack'+str(math.floor(brightness/10))+".png",newFolder+"/pack.png")
+                shutil.copy('packIcons/pack'+str(math.floor(brightness/10)*10)+".png",newFolder+"/pack.png")
                 newPackMeta = newFolder+'/pack.mcmeta'
                 f = open(newPackMeta,'r')
                 packdata = f.read()
