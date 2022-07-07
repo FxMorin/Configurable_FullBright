@@ -16,11 +16,11 @@ jobs:
             import shutil
             import math
             os.mkdir('output')
-            for brightness in range(1, 1001):
-                brightStr = str(brightness/10)
+            for brightness in range(1, 10001):
+                brightStr = str(brightness/100)
                 newFolder = 'output/FullbrightPack'+brightStr
                 shutil.copytree('FullbrightPack', newFolder)
-                shutil.copy('packIcons/pack'+str(math.floor(brightness/100)*10)+".png",newFolder+"/pack.png")
+                shutil.copy('packIcons/pack'+str(math.floor(brightness/1000)*10)+".png",newFolder+"/pack.png")
                 newPackMeta = newFolder+'/pack.mcmeta'
                 f = open(newPackMeta,'r')
                 packdata = f.read()
