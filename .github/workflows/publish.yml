@@ -1,6 +1,8 @@
 # This workflow will run a python script that will make multiple versions of the same resourcepack with different levels of fullbright being used
 name: Upload-on-release
-on: release
+on:
+  release:
+    types: [published]
 jobs:
   Build:
     runs-on: ubuntu-latest
