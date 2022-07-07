@@ -1,0 +1,44 @@
+# This workflow will run a python script that will make multiple versions of the same resourcepack with different levels of fullbright being used
+name: Upload-on-release
+on: release
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: jannekem/run-python-script-action@v1
+        with:
+          script: |
+            import os
+            import shutil
+            os.mkdir('output')
+            for brightness in range(10, 110, 10):
+                brightStr = str(brightness)
+                newFolder = 'output/FullbrightPack'+brightStr
+                shutil.copytree('FullbrightPack', newFolder)
+                shutil.copy('packIcons/pack'+brightStr+".png",newFolder+"/pack.png")
+                newPackMeta = newFolder+'/pack.mcmeta'
+                f = open(newPackMeta,'r')
+                packdata = f.read()
+                f.close()
+                newpackdata = packdata.replace('FullBright 40%', 'FullBright '+brightStr+'%')
+                f = open(newPackMeta,'w')
+                f.write(newpackdata)
+                f.close()
+                newFile = newFolder+'/assets/minecraft/shaders/include/light.glsl'
+                f = open(newFile,'r')
+                filedata = f.read()
+                f.close()
+                newdata = filedata.replace('FULLBRIGHT_GAMMA_SHIFT (40.0)', 'FULLBRIGHT_GAMMA_SHIFT ('+brightStr+'.0)')
+                f = open(newFile,'w')
+                f.write(newdata)
+                f.close()
+                shutil.make_archive(newFolder,'zip',newFolder)
+                shutil.rmtree(newFolder)
+      - name: Upload fullbright zips
+        uses: alexellis/upload-assets@0.2.2
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          asset_paths: '["./output/*.zip"]'
